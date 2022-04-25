@@ -1,16 +1,26 @@
-import express from "express";
+import express, { NextFunction, Request } from "express";
+import http from "http";
+import "dotenv/config";
 
-const app = express();
-const port = 3000;
+import { expressConfig } from "./loaders/express";
+import { startApolloServer } from "./loaders/apollo";
 
-app.post("/graphql", (req, res) => {
-  res.send("Implement GraphQL endpoint!");
-});
+async function main() {
+  try {
+    //setup express
+    const app = express();
+    await expressConfig(app);
+    const httpServer = http.createServer(app);
 
-app.post("/upload", (req, res) => {
-  res.send("Implement file upload endpoint!");
-});
+    //start apollo server
+    const apolloServer = await startApolloServer({ app, httpServer });
 
-app.listen(port, () => {
-  console.log(`File Manager API is available at http://localhost:${port}`);
-});
+    await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve));
+
+    console.log(`🚀 Server ready at http://localhost:4000${apolloServer.graphqlPath}`);
+  } catch (err) {
+    console.error("💀 Error starting the node server", err);
+  }
+}
+
+void main();

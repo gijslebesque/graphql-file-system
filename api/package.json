@@ -2,10 +2,20 @@
   "name": "api",
   "version": "1.0.0",
   "dependencies": {
-    "express": "^4.17.3"
+    "apollo-server-core": "^3.6.7",
+    "apollo-server-express": "^3.6.7",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-async-errors": "^3.1.1",
+    "graphql": "^16.4.0",
+    "graphql-upload": "^13.0.0",
+    "uuid": "^8.3.2",
+    "zod": "^3.14.4"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
+    "@types/graphql-upload": "^8.0.11",
+    "@types/uuid": "^8.3.4",
     "nodemon": "^2.0.15",
     "ts-node": "^10.5.0"
   },

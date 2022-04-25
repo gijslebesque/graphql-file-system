@@ -33,3 +33,5 @@ cypress.json
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+data.json
+api/src/images

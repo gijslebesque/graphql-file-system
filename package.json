@@ -17,6 +17,7 @@
     "typescript": "^4.5.5"
   },
   "scripts": {
-    "start": "concurrently \"cd api && yarn start\" \"cd app && yarn start\""
+    "start": "concurrently \"cd api && yarn start\" \"cd app && yarn start\"",
+    "clean": "rm -f ./api/src/data.json"
   }
 }
