@@ -2,6 +2,7 @@
   "name": "app",
   "version": "1.0.0",
   "dependencies": {
+    "@apollo/client": "^3.5.10",
     "@babel/core": "^7.17.5",
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
@@ -16,8 +17,10 @@
     "@types/promise": "^7.1.30",
     "@types/react": "^16.14.2",
     "@types/react-dom": "^16.9.14",
+    "apollo-upload-client": "^17.0.0",
     "babel-loader": "^8.2.3",
     "express": "^4.17.3",
+    "graphql": "^16.4.0",
     "html-webpack-plugin": "^5.5.0",
     "markdown-to-jsx": "^7.1.6",
     "nodemon": "^2.0.15",
@@ -31,5 +34,8 @@
   },
   "scripts": {
     "start": "webpack serve"
+  },
+  "devDependencies": {
+    "@types/apollo-upload-client": "^17.0.0"
   }
 }

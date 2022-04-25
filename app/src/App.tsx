@@ -4,6 +4,9 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AppBar } from "./components/AppBar";
 import { Welcome } from "./components/Welcome";
+import { Apollo } from "./providers";
+import { UploadFile } from "./components/UploadFile";
+import { GetFiles } from "./components/GetFiles";
 
 const theme = createTheme({
   palette: {
@@ -18,12 +21,15 @@ const theme = createTheme({
 
 export const App = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar />
-        <Welcome />
-      </Box>
-    </ThemeProvider>
+    <Apollo>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Box sx={{ flexGrow: 1 }}>
+          <AppBar />
+          <UploadFile />
+          <GetFiles></GetFiles>
+        </Box>
+      </ThemeProvider>
+    </Apollo>
   );
 };
