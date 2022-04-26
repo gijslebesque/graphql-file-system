@@ -7,6 +7,7 @@ const typeDefs = gql`
   scalar Upload
 
   type File {
+    id: String
     filename: String
     orginalFilename: String
     thumbnail: String
@@ -19,7 +20,6 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    # Multiple uploads are supported. See graphql-upload docs for details.
     singleUpload(file: Upload!): File!
   }
 `;

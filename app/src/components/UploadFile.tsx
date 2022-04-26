@@ -1,3 +1,4 @@
+import { Box, Input } from "@mui/material";
 import React from "react";
 import { useUploadFile } from "../network";
 
@@ -10,12 +11,15 @@ export const UploadFile: React.FC = () => {
     },
   }: any) => validity.valid && mutate({ variables: { file } });
 
-  //   if (loading) return <div>Loading...</div>;
   if (error) return <div>{JSON.stringify(error, null, 2)}</div>;
 
   return (
-    <>
-      <input type="file" required onChange={onChange} />
-    </>
+    <Box
+      sx={{
+        m: 4,
+      }}
+    >
+      <Input type="file" required onChange={onChange} />
+    </Box>
   );
 };

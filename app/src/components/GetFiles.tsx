@@ -20,7 +20,7 @@ export const GetFiles: React.FC = () => {
     return <MediaCard file={file} />;
   });
 
-  return <Box sx={{ display: "flex" }}>{elems}</Box>;
+  return <Box sx={{ display: "flex", flexWrap: "wrap" }}>{elems}</Box>;
 };
 
 const MediaCard: React.FC<{ file: IFile }> = ({ file }) => {

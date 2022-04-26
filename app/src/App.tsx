@@ -28,7 +28,7 @@ export const App = () => {
           <AppBar />
         </Box>
         <UploadFile />
-        <GetFiles></GetFiles>
+        <GetFiles />
       </ThemeProvider>
     </Apollo>
   );

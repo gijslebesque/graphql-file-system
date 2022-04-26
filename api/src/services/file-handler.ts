@@ -24,6 +24,7 @@ export const fileHandler = {
     const stream = await fs.createWriteStream(`${__dirname}/../public/images/${localFileName}`);
 
     const data = {
+      id: uuidv4(),
       filename: localFileName,
       orginalFilename: filename,
       mimetype,
