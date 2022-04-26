@@ -18,6 +18,6 @@
   },
   "scripts": {
     "start": "concurrently \"cd api && yarn start\" \"cd app && yarn start\"",
-    "clean": "rm -f ./api/src/data.json"
+    "clean": "rm -f ./api/src/data.json && rm -r ./api/src/public/images/* && rm -r ./api/src/public/thumbnails/*"
   }
 }

@@ -5,11 +5,6 @@ import { ZodError } from "zod";
 import cors from "cors";
 import bodyParser from "body-parser";
 import routes from "../routes";
-// import { dbConfig } from "../config";
-// import Logger from "./logger";
-// import { registerException } from "./monitor";
-
-console.log(process.env.API_PREFIX);
 
 interface ResponseError extends Error {
   status?: number;
@@ -43,7 +38,6 @@ export const expressConfig = (app: Application): void => {
 
   // catch 404
   app.use((req: Request, res: Response, next: NextFunction) => {
-    console.log(req.url);
     if (req.url === process.env.GRAPHQL_PREFIX) {
       return next();
     }

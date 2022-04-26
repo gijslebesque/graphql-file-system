@@ -8,6 +8,7 @@ const typeDefs = gql`
 
   type File {
     filename: String!
+    file: String
     mimetype: String!
     encoding: String!
   }

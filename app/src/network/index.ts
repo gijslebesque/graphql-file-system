@@ -4,6 +4,7 @@ const GET_FILES = gql`
   query {
     files {
       filename
+      file
     }
   }
 `;
@@ -18,6 +19,20 @@ const SINGLE_UPLOAD = gql`
   }
 `;
 
-export const useUploadFile = () => useMutation(SINGLE_UPLOAD, { refetchQueries: [GET_FILES] });
+interface File {
+  filename: string;
+  file: string;
+}
 
-export const useGetFiles = () => useQuery(GET_FILES);
+interface FileQuery {
+  files: File[];
+}
+
+export const useUploadFile = () =>
+  useMutation(
+    SINGLE_UPLOAD
+
+    // { refetchQueries: [GET_FILES] }
+  );
+
+export const useGetFiles = () => useQuery<FileQuery>(GET_FILES);

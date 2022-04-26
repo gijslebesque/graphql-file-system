@@ -34,4 +34,5 @@ cypress.json
 !.yarn/versions
 .pnp.*
 data.json
-api/src/images
+api/src/public/images/
+api/src/public/thumbnails/
