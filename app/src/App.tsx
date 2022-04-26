@@ -26,9 +26,9 @@ export const App = () => {
         <CssBaseline />
         <Box sx={{ flexGrow: 1 }}>
           <AppBar />
-          <UploadFile />
-          <GetFiles></GetFiles>
         </Box>
+        <UploadFile />
+        <GetFiles></GetFiles>
       </ThemeProvider>
     </Apollo>
   );

@@ -1,3 +1,4 @@
+import { Button, Card, CardActions, CardContent, CardMedia, Box, Typography } from "@mui/material";
 import React from "react";
 import { useGetFiles } from "../network/";
 
@@ -15,16 +16,32 @@ export const GetFiles: React.FC = () => {
   if (error) return <div>{JSON.stringify(error, null, 2)}</div>;
   if (!data) return null;
 
-  const elems = data.files.map((e) => {
-    const data = toBase64(e.file);
-
-    return <img src={`data:image/png;base64,${data}`} />;
+  const elems = data.files.map((file) => {
+    return <MediaCard file={file} />;
   });
 
+  return <Box sx={{ display: "flex" }}>{elems}</Box>;
+};
+
+const MediaCard: React.FC<{ file: IFile }> = ({ file }) => {
+  const data = `data:image/png;base64,${toBase64(file.thumbnail)}`;
+
   return (
-    <React.Fragment>
-      {JSON.stringify(data.files, null, 2)}
-      {elems}
-    </React.Fragment>
+    <Card sx={{ maxWidth: 345, p: 4, m: 4 }}>
+      <CardMedia component="img" height="140" image={data} alt="green iguana" />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {file.orginalFilename}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button variant="contained" color="success">
+          Edit
+        </Button>
+        <Button variant="outlined" color="error">
+          Delete
+        </Button>
+      </CardActions>
+    </Card>
   );
 };

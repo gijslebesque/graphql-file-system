@@ -5,47 +5,68 @@ import { v4 as uuidv4 } from "uuid";
 import { createRecord, generateThumb } from "../utils";
 const path = __dirname + "/../data.json";
 
+const getExtension = (mimeType: string) => mimeType.split("/")[1];
+
+const createFileName = (mimeType: string) => {
+  const id = uuidv4();
+
+  const extension = getExtension(mimeType);
+
+  return `${id}.${extension}`;
+};
+
 export const fileHandler = {
   async storeFile(file: FileUpload) {
     const { createReadStream, filename, mimetype, encoding } = await file;
 
-    const id = uuidv4();
+    const localFileName = createFileName(mimetype);
 
-    const localFileName = `${id}.jpg`;
+    const stream = await fs.createWriteStream(`${__dirname}/../public/images/${localFileName}`);
 
-    const stream = await fs.createWriteStream(`${__dirname}/../images/${id}.jpg`);
+    const data = {
+      filename: localFileName,
+      orginalFilename: filename,
+      mimetype,
+      encoding,
+    };
 
-    createReadStream()
+    await createReadStream()
       .pipe(stream)
       .on("finish", async () => {
-        generateThumb(localFileName);
-        await createRecord<DataRecord>(path, {
-          filename: localFileName,
-          orginalFilename: filename,
-          mimetype,
-          encoding,
-        });
+        if (mimetype.includes("image")) {
+          await generateThumb(localFileName);
+        }
+        await createRecord<DataRecord>(path, data);
       });
 
-    return localFileName;
+    return getFile(data);
   },
 
   async getFiles() {
     if (fs.existsSync(path)) {
       const file = fs.readFileSync(path, "utf8");
-      const json = JSON.parse(file);
+      const json: DataRecord[] = JSON.parse(file);
 
-      const data = json.map((file: File) => {
-        const realFile = fs.readFileSync(`${__dirname}/../public/thumbnails/${file.filename}`);
-        return {
-          ...file,
-          file: JSON.stringify(realFile),
-        };
-      });
+      const data = json.map((file) => getFile(file));
 
       return data;
     }
 
     return [];
   },
+};
+
+const base = `${__dirname}/../public`;
+const getFile = (file: DataRecord) => {
+  const fileLoc = `${base}/thumbnails/${file.filename}`;
+  let thumbnail = null;
+  if (fs.existsSync(fileLoc)) {
+    thumbnail = fs.readFileSync(`${fileLoc}`);
+  } else {
+    thumbnail = fs.readFileSync(`${base}/placeholder.jpeg`);
+  }
+  return {
+    ...file,
+    thumbnail: JSON.stringify(thumbnail),
+  };
 };

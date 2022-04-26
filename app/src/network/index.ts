@@ -4,7 +4,8 @@ const GET_FILES = gql`
   query {
     files {
       filename
-      file
+      orginalFilename
+      thumbnail
     }
   }
 `;
@@ -13,26 +14,24 @@ const SINGLE_UPLOAD = gql`
   mutation ($file: Upload!) {
     singleUpload(file: $file) {
       filename
+      orginalFilename
       mimetype
       encoding
     }
   }
 `;
 
-interface File {
-  filename: string;
-  file: string;
-}
-
-interface FileQuery {
-  files: File[];
-}
-
-export const useUploadFile = () =>
-  useMutation(
-    SINGLE_UPLOAD
+export const useUploadFile = () => {
+  return useMutation(
+    SINGLE_UPLOAD,
+    {
+      update: (cache, data) => {
+        debugger;
+      },
+    }
 
     // { refetchQueries: [GET_FILES] }
   );
+};
 
 export const useGetFiles = () => useQuery<FileQuery>(GET_FILES);
