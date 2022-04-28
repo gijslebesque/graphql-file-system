@@ -1,13 +1,7 @@
 import { Button, Card, CardActions, CardContent, CardMedia, Box, Typography } from "@mui/material";
-import React from "react";
-import { useGetFiles } from "../network/";
-
-function toBase64(file: string) {
-  const fileparse = JSON.parse(file);
-  return btoa(
-    fileparse.data.reduce((data: string, byte: number) => data + String.fromCharCode(byte), "")
-  );
-}
+import React, { useCallback } from "react";
+import { useDeleteFile, useGetFiles } from "../network/";
+import { toBase64 } from "../utils";
 
 export const GetFiles: React.FC = () => {
   const { loading, error, data } = useGetFiles();
@@ -26,6 +20,16 @@ export const GetFiles: React.FC = () => {
 const MediaCard: React.FC<{ file: IFile }> = ({ file }) => {
   const data = `data:image/png;base64,${toBase64(file.thumbnail)}`;
 
+  const [mutate] = useDeleteFile();
+
+  const handleDelete = useCallback(() => {
+    mutate({
+      variables: {
+        id: file.id,
+      },
+    });
+  }, [mutate]);
+
   return (
     <Card sx={{ maxWidth: 345, p: 4, m: 4 }}>
       <CardMedia component="img" height="140" image={data} alt="green iguana" />
@@ -38,7 +42,7 @@ const MediaCard: React.FC<{ file: IFile }> = ({ file }) => {
         <Button variant="contained" color="success">
           Edit
         </Button>
-        <Button variant="outlined" color="error">
+        <Button variant="outlined" color="error" onClick={handleDelete}>
           Delete
         </Button>
       </CardActions>

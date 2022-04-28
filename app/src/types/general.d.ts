@@ -1,4 +1,5 @@
 interface IFile {
+  id: string;
   filename: string;
   orginalFilename: string;
   mimetype: string;
@@ -6,6 +7,6 @@ interface IFile {
   thumbnail: string;
 }
 
-interface FileQuery {
+interface IFileQuery {
   files: IFile[];
 }

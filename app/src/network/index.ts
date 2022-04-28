@@ -12,7 +12,7 @@ const GET_FILES = gql`
 `;
 
 const SINGLE_UPLOAD = gql`
-  mutation ($file: Upload!) {
+  mutation SingeUpload($file: Upload!) {
     singleUpload(file: $file) {
       id
       filename
@@ -24,13 +24,21 @@ const SINGLE_UPLOAD = gql`
   }
 `;
 
+const DELETE_FILE = gql`
+  mutation DeleteFile($id: String!) {
+    deleteFile(id: $id) {
+      id
+    }
+  }
+`;
+
 export const useUploadFile = () => {
   return useMutation(SINGLE_UPLOAD, {
     update(cache, { data: { singleUpload } }) {
       cache.modify({
         fields: {
-          files(existingTodos = []) {
-            const newTodoRef = cache.writeFragment({
+          files(existingFiless = []) {
+            const newFileRef = cache.writeFragment({
               data: singleUpload,
               fragment: gql`
                 fragment NewFile on File {
@@ -43,7 +51,7 @@ export const useUploadFile = () => {
                 }
               `,
             });
-            return [...existingTodos, newTodoRef];
+            return [...existingFiless, newFileRef];
           },
         },
       });
@@ -51,4 +59,14 @@ export const useUploadFile = () => {
   });
 };
 
-export const useGetFiles = () => useQuery<FileQuery>(GET_FILES);
+export const useDeleteFile = () => {
+  return useMutation(DELETE_FILE, {
+    update(cache, { data: { deleteFile } }) {
+      const normalizedId = cache.identify({ ...deleteFile });
+      cache.evict({ id: normalizedId });
+      cache.gc();
+    },
+  });
+};
+
+export const useGetFiles = () => useQuery<IFileQuery>(GET_FILES);

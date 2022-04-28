@@ -1,6 +1,6 @@
 import { GraphQLUpload, FileUpload } from "graphql-upload";
 
-import { fileHandler } from "../services/file-handler";
+import { fileService } from "../services/file-service";
 
 export const uploadResolver = {
   // This maps the `Upload` scalar to the implementation provided
@@ -10,7 +10,16 @@ export const uploadResolver = {
   Mutation: {
     singleUpload: async (_, { file }: { file: FileUpload }) => {
       try {
-        return fileHandler.storeFile(file);
+        const fileData = await fileService.storeFile(file);
+
+        return fileService.getFile(fileData);
+      } catch (err) {
+        throw err;
+      }
+    },
+    deleteFile: async (_, { id }: { id: string }) => {
+      try {
+        return fileService.delete(id);
       } catch (err) {
         throw err;
       }
@@ -20,7 +29,7 @@ export const uploadResolver = {
   Query: {
     files: async () => {
       try {
-        return fileHandler.getFiles();
+        return fileService.getFiles();
       } catch (err) {
         throw err;
       }
