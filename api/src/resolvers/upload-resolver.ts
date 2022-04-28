@@ -24,6 +24,14 @@ export const uploadResolver = {
         throw err;
       }
     },
+
+    editFile: async (_, { input }: { input: IDataEdit }) => {
+      try {
+        return fileService.edit(input);
+      } catch (err) {
+        throw err;
+      }
+    },
   },
 
   Query: {

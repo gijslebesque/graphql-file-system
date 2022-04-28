@@ -25,6 +25,11 @@ const typeDefs = gql`
     encoding: String
   }
 
+  input EditFile {
+    id: String
+    orginalFilename: String
+  }
+
   type Query {
     files: [File]
   }
@@ -35,6 +40,10 @@ const typeDefs = gql`
 
   type Mutation {
     deleteFile(id: String!): File!
+  }
+
+  type Mutation {
+    editFile(input: EditFile!): File!
   }
 `;
 export default typeDefs;

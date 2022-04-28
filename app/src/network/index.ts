@@ -1,16 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 
-const GET_FILES = gql`
-  query GetFiles {
-    files {
-      id
-      filename
-      orginalFilename
-      thumbnail
-    }
-  }
-`;
-
 const SINGLE_UPLOAD = gql`
   mutation SingeUpload($file: Upload!) {
     singleUpload(file: $file) {
@@ -20,14 +9,6 @@ const SINGLE_UPLOAD = gql`
       mimetype
       encoding
       thumbnail
-    }
-  }
-`;
-
-const DELETE_FILE = gql`
-  mutation DeleteFile($id: String!) {
-    deleteFile(id: $id) {
-      id
     }
   }
 `;
@@ -59,6 +40,13 @@ export const useUploadFile = () => {
   });
 };
 
+const DELETE_FILE = gql`
+  mutation DeleteFile($id: String!) {
+    deleteFile(id: $id) {
+      id
+    }
+  }
+`;
 export const useDeleteFile = () => {
   return useMutation(DELETE_FILE, {
     update(cache, { data: { deleteFile } }) {
@@ -68,5 +56,29 @@ export const useDeleteFile = () => {
     },
   });
 };
+
+const EDIT_FILE = gql`
+  mutation EditFile($input: EditFile!) {
+    editFile(input: $input) {
+      id
+      orginalFilename
+    }
+  }
+`;
+
+export const useEditFile = () => {
+  return useMutation(EDIT_FILE);
+};
+
+const GET_FILES = gql`
+  query GetFiles {
+    files {
+      id
+      filename
+      orginalFilename
+      thumbnail
+    }
+  }
+`;
 
 export const useGetFiles = () => useQuery<IFileQuery>(GET_FILES);

@@ -2,7 +2,7 @@ import fs from "fs";
 import { FileUpload } from "graphql-upload";
 import sharp, { OutputInfo } from "sharp";
 
-import { createRecord } from "../utils";
+import { createRecord, getParsedFiles } from "../utils";
 import { createFileName } from "../utils/general";
 
 export const fileService = {
@@ -47,8 +47,7 @@ export const fileService = {
 
   getFiles(): IDataOut[] {
     if (fs.existsSync(this.dataLocation)) {
-      const file = fs.readFileSync(this.dataLocation, "utf8");
-      const json: IDataRecord[] = JSON.parse(file);
+      const json = getParsedFiles<IDataRecord[]>(this.dataLocation);
 
       const data = json.map((file) => this.getFile(file));
 
@@ -68,9 +67,7 @@ export const fileService = {
   },
 
   getFileById(id: string): IDataOut | null {
-    const files = fs.readFileSync(this.dataLocation, "utf8");
-
-    const json: IDataRecord[] = JSON.parse(files);
+    const json = getParsedFiles<IDataRecord[]>(this.dataLocation);
 
     const file = json.find((file) => file.id === id);
 
@@ -85,9 +82,7 @@ export const fileService = {
   },
 
   delete(id: string): IDataRecord | null {
-    const files = fs.readFileSync(this.dataLocation, "utf8");
-
-    const json: IDataRecord[] = JSON.parse(files);
+    const json = getParsedFiles<IDataRecord[]>(this.dataLocation);
 
     const file = json.find((file) => file.id === id);
 
@@ -104,13 +99,28 @@ export const fileService = {
     return file;
   },
 
+  edit(input: IDataEdit): IDataRecord | null {
+    const { id, orginalFilename } = input;
+    const json = getParsedFiles<IDataRecord[]>(this.dataLocation);
+
+    const index = json.findIndex((file) => file.id === id);
+
+    if (index === -1) return null;
+
+    json[index].orginalFilename = orginalFilename;
+
+    fs.writeFileSync(this.dataLocation, JSON.stringify(json));
+
+    return json[index];
+  },
+
   getThumbnail(filename: string): string {
-    const fileLoc = `${this.thumbnailsLocation}/${filename}`;
+    const path = `${this.thumbnailsLocation}/${filename}`;
     let thumbnail = null;
-    if (fs.existsSync(fileLoc)) {
-      thumbnail = fs.readFileSync(`${fileLoc}`);
+    if (fs.existsSync(path)) {
+      thumbnail = fs.readFileSync(`${path}`);
     } else {
-      thumbnail = fs.readFileSync(`${this.thumbnailsLocation}/placeholder.jpeg`);
+      thumbnail = fs.readFileSync(`${__dirname}/../public/placeholder.jpeg`);
     }
 
     return JSON.stringify(thumbnail);

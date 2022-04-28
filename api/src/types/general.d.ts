@@ -9,3 +9,5 @@ interface IDataRecord {
 interface IDataOut extends IDataRecord {
   thumbnail: string;
 }
+
+interface IDataEdit extends Pick<IDataRecord, "id" | "orginalFilename"> {}
