@@ -10,4 +10,9 @@ interface IDataOut extends IDataRecord {
   thumbnail: string;
 }
 
-interface IDataEdit extends Pick<IDataRecord, "id" | "orginalFilename"> {}
+type IDataEdit = Pick<IDataRecord, "id" | "orginalFilename">;
+
+interface Pagination {
+  limit: number;
+  offset: number;
+}

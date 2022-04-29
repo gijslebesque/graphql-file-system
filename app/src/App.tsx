@@ -3,10 +3,10 @@ import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AppBar } from "./components/AppBar";
-import { Welcome } from "./components/Welcome";
 import { Apollo } from "./providers";
 import { UploadFile } from "./components/UploadFile";
 import { GetFiles } from "./components/GetFiles";
+import { Container } from "@mui/material";
 
 const theme = createTheme({
   palette: {
@@ -28,7 +28,9 @@ export const App = () => {
           <AppBar />
         </Box>
         <UploadFile />
-        <GetFiles />
+        <Container>
+          <GetFiles />
+        </Container>
       </ThemeProvider>
     </Apollo>
   );

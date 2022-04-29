@@ -17,8 +17,6 @@ export const fileService = {
 
     const path = `${this.imageLocation}/${localFileName}`;
 
-    const stream = await fs.createWriteStream(path);
-
     const data: IDataRecord = {
       id,
       filename: localFileName,
@@ -26,6 +24,8 @@ export const fileService = {
       mimetype,
       encoding,
     };
+
+    const stream = fs.createWriteStream(path);
 
     return new Promise((resolve, reject) => {
       createReadStream()
@@ -45,11 +45,11 @@ export const fileService = {
     });
   },
 
-  getFiles(): IDataOut[] {
+  getFiles({ limit = 10, offset = 0 }: Pagination): IDataOut[] {
     if (fs.existsSync(this.dataLocation)) {
       const json = getParsedFiles<IDataRecord[]>(this.dataLocation);
 
-      const data = json.map((file) => this.getFile(file));
+      const data = json.slice(offset, offset + limit).map((file) => this.getFile(file));
 
       return data;
     }
@@ -110,7 +110,6 @@ export const fileService = {
     json[index].orginalFilename = orginalFilename;
 
     fs.writeFileSync(this.dataLocation, JSON.stringify(json));
-
     return json[index];
   },
 

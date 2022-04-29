@@ -35,12 +35,20 @@ export const uploadResolver = {
   },
 
   Query: {
-    files: async () => {
+    files: async (_, input: Pagination) => {
       try {
-        return fileService.getFiles();
+        return fileService.getFiles(input);
       } catch (err) {
         throw err;
       }
     },
+
+    // search: async (_, { input }: { input: IDataEdit }) => {
+    //   try {
+    //     return fileService.getFiles();
+    //   } catch (err) {
+    //     throw err;
+    //   }
+    // },
   },
 };

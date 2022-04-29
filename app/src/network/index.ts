@@ -15,28 +15,28 @@ const SINGLE_UPLOAD = gql`
 
 export const useUploadFile = () => {
   return useMutation(SINGLE_UPLOAD, {
-    update(cache, { data: { singleUpload } }) {
-      cache.modify({
-        fields: {
-          files(existingFiless = []) {
-            const newFileRef = cache.writeFragment({
-              data: singleUpload,
-              fragment: gql`
-                fragment NewFile on File {
-                  id
-                  filename
-                  orginalFilename
-                  mimetype
-                  encoding
-                  thumbnail
-                }
-              `,
-            });
-            return [...existingFiless, newFileRef];
-          },
-        },
-      });
-    },
+    // update(cache, { data: { singleUpload } }) {
+    //   cache.modify({
+    //     fields: {
+    //       files(existingFiless = []) {
+    //         const newFileRef = cache.writeFragment({
+    //           data: singleUpload,
+    //           fragment: gql`
+    //             fragment NewFile on File {
+    //               id
+    //               filename
+    //               orginalFilename
+    //               mimetype
+    //               encoding
+    //               thumbnail
+    //             }
+    //           `,
+    //         });
+    //         return [...existingFiless, newFileRef];
+    //       },
+    //     },
+    //   });
+    // },
   });
 };
 
@@ -48,8 +48,11 @@ const DELETE_FILE = gql`
   }
 `;
 export const useDeleteFile = () => {
-  return useMutation(DELETE_FILE, {
-    update(cache, { data: { deleteFile } }) {
+  return useMutation<{ deleteFile: IFile }, { id: string }>(DELETE_FILE, {
+    update(cache, { data }) {
+      if (!data) return;
+
+      const { deleteFile } = data;
       const normalizedId = cache.identify({ ...deleteFile });
       cache.evict({ id: normalizedId });
       cache.gc();
@@ -67,12 +70,12 @@ const EDIT_FILE = gql`
 `;
 
 export const useEditFile = () => {
-  return useMutation(EDIT_FILE);
+  return useMutation<{ editFile: IFile }, { input: EditFile }>(EDIT_FILE);
 };
 
 const GET_FILES = gql`
-  query GetFiles {
-    files {
+  query GetFiles($offset: Int, $limit: Int) {
+    files(offset: $offset, limit: $limit) {
       id
       filename
       orginalFilename
@@ -81,4 +84,7 @@ const GET_FILES = gql`
   }
 `;
 
-export const useGetFiles = () => useQuery<IFileQuery>(GET_FILES);
+export const useGetFiles = ({ limit, offset }: IPagination) =>
+  useQuery<IFileQuery, { limit: number; offset: number }>(GET_FILES, {
+    variables: { limit, offset },
+  });

@@ -7,6 +7,13 @@ interface IFile {
   thumbnail: string;
 }
 
+type EditFile = Pick<IFile, "id" | "orginalFilename">;
+
 interface IFileQuery {
   files: IFile[];
+}
+
+interface IPagination {
+  limit: number;
+  offset: number;
 }
