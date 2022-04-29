@@ -16,3 +16,7 @@ export function getParsedFiles<T>(path: string): T {
   const json: T = JSON.parse(file);
   return json;
 }
+
+export const removeFile = (path: string) => {
+  fs.existsSync(path) && fs.unlinkSync(path);
+};

@@ -3,7 +3,7 @@ import { FileUpload } from "graphql-upload";
 import sharp, { OutputInfo } from "sharp";
 import Fuse from "fuse.js";
 
-import { createRecord, getParsedFiles } from "../utils";
+import { createRecord, getParsedFiles, removeFile } from "../utils";
 import { createFileName } from "../utils/general";
 
 export const fileService = {
@@ -109,9 +109,11 @@ export const fileService = {
 
     fs.writeFileSync(this.dataLocation, JSON.stringify(newFiles));
 
-    fs.unlinkSync(`${this.imageLocation}/${file.filename}`);
+    const filePath = `${this.imageLocation}/${file.filename}`;
+    const thumbnailPath = `${this.thumbnailsLocation}/${file.filename}`;
 
-    fs.unlinkSync(`${this.thumbnailsLocation}/${file.filename}`);
+    removeFile(filePath);
+    removeFile(thumbnailPath);
 
     return file;
   },
