@@ -10,7 +10,7 @@ interface IFile {
 type EditFile = Pick<IFile, "id" | "orginalFilename">;
 
 interface IFileQuery {
-  files: IFile[];
+  [key: string]: IFile[];
 }
 
 interface IPagination {

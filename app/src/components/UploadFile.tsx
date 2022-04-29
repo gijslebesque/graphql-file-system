@@ -13,13 +13,5 @@ export const UploadFile: React.FC = () => {
 
   if (error) return <div>{JSON.stringify(error, null, 2)}</div>;
 
-  return (
-    <Box
-      sx={{
-        m: 4,
-      }}
-    >
-      <Input type="file" required onChange={onChange} />
-    </Box>
-  );
+  return <Input type="file" required onChange={onChange} />;
 };

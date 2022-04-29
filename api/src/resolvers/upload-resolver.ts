@@ -43,12 +43,12 @@ export const uploadResolver = {
       }
     },
 
-    // search: async (_, { input }: { input: IDataEdit }) => {
-    //   try {
-    //     return fileService.getFiles();
-    //   } catch (err) {
-    //     throw err;
-    //   }
-    // },
+    search: async (_, { input }: { input: string }) => {
+      try {
+        return fileService.search(input);
+      } catch (err) {
+        throw err;
+      }
+    },
   },
 };

@@ -16,6 +16,7 @@ const typeDefs = gql`
   # in the resolver map below.
   scalar Upload
 
+  #Types
   type File @cacheControl(maxAge: 6000) {
     id: String
     filename: String
@@ -30,10 +31,15 @@ const typeDefs = gql`
     orginalFilename: String
   }
 
+  #Queries
   type Query {
     files(offset: Int, limit: Int): [File]
   }
+  type Query {
+    search(input: String): [File]!
+  }
 
+  #Mutations
   type Mutation {
     singleUpload(file: Upload!): File!
   }

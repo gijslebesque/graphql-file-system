@@ -7,6 +7,7 @@ import { Apollo } from "./providers";
 import { UploadFile } from "./components/UploadFile";
 import { GetFiles } from "./components/GetFiles";
 import { Container } from "@mui/material";
+import { Search } from "./components/Search";
 
 const theme = createTheme({
   palette: {
@@ -24,11 +25,18 @@ export const App = () => {
     <Apollo>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Box sx={{ flexGrow: 1 }}>
+        <Box>
           <AppBar />
         </Box>
-        <UploadFile />
         <Container>
+          <Box sx={{ my: 4 }}>
+            <UploadFile />
+          </Box>
+
+          <Box sx={{ my: 4 }}>
+            <Search />
+          </Box>
+
           <GetFiles />
         </Container>
       </ThemeProvider>

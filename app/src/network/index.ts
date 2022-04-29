@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 
 const SINGLE_UPLOAD = gql`
   mutation SingeUpload($file: Upload!) {
@@ -15,28 +15,28 @@ const SINGLE_UPLOAD = gql`
 
 export const useUploadFile = () => {
   return useMutation(SINGLE_UPLOAD, {
-    // update(cache, { data: { singleUpload } }) {
-    //   cache.modify({
-    //     fields: {
-    //       files(existingFiless = []) {
-    //         const newFileRef = cache.writeFragment({
-    //           data: singleUpload,
-    //           fragment: gql`
-    //             fragment NewFile on File {
-    //               id
-    //               filename
-    //               orginalFilename
-    //               mimetype
-    //               encoding
-    //               thumbnail
-    //             }
-    //           `,
-    //         });
-    //         return [...existingFiless, newFileRef];
-    //       },
-    //     },
-    //   });
-    // },
+    update(cache, { data: { singleUpload } }) {
+      cache.modify({
+        fields: {
+          files(existingFiless = []) {
+            const newFileRef = cache.writeFragment({
+              data: singleUpload,
+              fragment: gql`
+                fragment NewFile on File {
+                  id
+                  filename
+                  orginalFilename
+                  mimetype
+                  encoding
+                  thumbnail
+                }
+              `,
+            });
+            return [...existingFiless, newFileRef];
+          },
+        },
+      });
+    },
   });
 };
 
@@ -88,3 +88,16 @@ export const useGetFiles = ({ limit, offset }: IPagination) =>
   useQuery<IFileQuery, { limit: number; offset: number }>(GET_FILES, {
     variables: { limit, offset },
   });
+
+const SEARCH_FILES = gql`
+  query SearchFiles($input: String) {
+    search(input: $input) {
+      id
+      filename
+      orginalFilename
+      thumbnail
+    }
+  }
+`;
+
+export const useSearchFiles = () => useLazyQuery<IFileQuery>(SEARCH_FILES);

@@ -1,6 +1,7 @@
 import fs from "fs";
 import { FileUpload } from "graphql-upload";
 import sharp, { OutputInfo } from "sharp";
+import Fuse from "fuse.js";
 
 import { createRecord, getParsedFiles } from "../utils";
 import { createFileName } from "../utils/general";
@@ -9,6 +10,9 @@ export const fileService = {
   dataLocation: `${__dirname}/../data.json`,
   imageLocation: `${__dirname}/../public/images`,
   thumbnailsLocation: `${__dirname}/../public/thumbnails`,
+  fuseOptions: {
+    keys: ["orginalFilename", "mimetype"],
+  },
 
   async storeFile(file: FileUpload): Promise<IDataRecord> {
     const { createReadStream, filename, mimetype, encoding } = await file;
@@ -55,6 +59,19 @@ export const fileService = {
     }
 
     return [];
+  },
+
+  search(query: string): IDataOut[] | null {
+    if (fs.existsSync(this.dataLocation)) {
+      const json = getParsedFiles<IDataRecord[]>(this.dataLocation);
+      const fuse = new Fuse(json, this.fuseOptions);
+
+      const result = fuse.search(query);
+
+      return result.map(({ item }) => this.getFile(item));
+    }
+
+    return null;
   },
 
   getFile(file: IDataRecord): IDataOut {
