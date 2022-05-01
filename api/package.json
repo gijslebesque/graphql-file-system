@@ -23,6 +23,6 @@
     "ts-node": "^10.5.0"
   },
   "scripts": {
-    "start": "nodemon ./src/index.ts"
+    "start": "nodemon ./src/index.ts --ext ts"
   }
 }
