@@ -9,6 +9,7 @@
     "express-async-errors": "^3.1.1",
     "fuse.js": "^6.5.3",
     "graphql": "^16.4.0",
+    "graphql-tools": "^8.2.8",
     "graphql-upload": "^13.0.0",
     "sharp": "^0.30.4",
     "uuid": "^8.3.2"

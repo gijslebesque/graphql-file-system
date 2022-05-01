@@ -14,7 +14,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:^3.0.0, @apollo/client@npm:^3.5.10":
+"@apollo/client@npm:^3.0.0, @apollo/client@npm:^3.5.10, @apollo/client@npm:~3.2.5 || ~3.3.0 || ~3.4.0 || ~3.5.0":
   version: 3.5.10
   resolution: "@apollo/client@npm:3.5.10"
   dependencies:
@@ -2945,12 +2945,12 @@ __metadata:
     express-async-errors: ^3.1.1
     fuse.js: ^6.5.3
     graphql: ^16.4.0
+    graphql-tools: ^8.2.8
     graphql-upload: ^13.0.0
     nodemon: ^2.0.15
     sharp: ^0.30.4
     ts-node: ^10.5.0
     uuid: ^8.3.2
-    zod: ^3.14.4
   languageName: unknown
   linkType: soft
 
@@ -5031,6 +5031,22 @@ __metadata:
   peerDependencies:
     graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
   checksum: b15162a3d62f17b9b79302445b9ee330e041582f1c7faca74b9dec5daa74272c906ec1c34e1c50592bb6215e5c3eba80a309103f6ba9e4c1cddc350c46f010df
+  languageName: node
+  linkType: hard
+
+"graphql-tools@npm:^8.2.8":
+  version: 8.2.8
+  resolution: "graphql-tools@npm:8.2.8"
+  dependencies:
+    "@apollo/client": ~3.2.5 || ~3.3.0 || ~3.4.0 || ~3.5.0
+    "@graphql-tools/schema": 8.3.10
+    tslib: ~2.3.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  dependenciesMeta:
+    "@apollo/client":
+      optional: true
+  checksum: 8a62528c80b97bc44c403ba0b9ff79b80c194261c121342cad764897b478809c244f89b6594f7074aafcbfcf59c2b47f9c5aaa95328dffc4614da2fc6ffd6add
   languageName: node
   linkType: hard
 
@@ -8764,12 +8780,5 @@ __metadata:
   version: 0.8.15
   resolution: "zen-observable@npm:0.8.15"
   checksum: b7289084bc1fc74a559b7259faa23d3214b14b538a8843d2b001a35e27147833f4107590b1b44bf5bc7f6dfe6f488660d3a3725f268e09b3925b3476153b7821
-  languageName: node
-  linkType: hard
-
-"zod@npm:^3.14.4":
-  version: 3.14.4
-  resolution: "zod@npm:3.14.4"
-  checksum: 30e75dc1e4e1d6ce5695750d1906b6b918779b8aa446f5db77eb2b8344d08f29344b5d0115034a9e695fd5a627d23c5c03d67efe58fe16fbb91dee9dc08761bc
   languageName: node
   linkType: hard

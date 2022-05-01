@@ -1,6 +1,7 @@
+import { mergeResolvers } from "@graphql-tools/merge";
+
 import { uploadResolver } from "./upload-resolver";
 
-//@TODO allow merge resolvers
-export const resolvers = {
-  ...uploadResolver,
-};
+const merged = [uploadResolver];
+
+export const resolvers = mergeResolvers(merged);
