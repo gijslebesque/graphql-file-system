@@ -3,8 +3,13 @@ import { FileUpload } from "graphql-upload";
 import sharp, { OutputInfo } from "sharp";
 import Fuse from "fuse.js";
 
-import { createRecord, getParsedFiles, removeFile } from "../utils";
+import { ApiError, getParsedFiles, removeFile } from "../utils";
 import { createFileName } from "../utils/general";
+
+/**
+ * @name fileService
+ * @description  Service for handling file system.
+ */
 
 export const fileService = {
   dataLocation: `${__dirname}/../data.json`,
@@ -14,10 +19,19 @@ export const fileService = {
     keys: ["orginalFilename", "mimetype"],
   },
 
+  /**
+   * @description  Stores a file
+   */
+
   async storeFile(file: FileUpload): Promise<IDataRecord> {
     const { createReadStream, filename, mimetype, encoding } = await file;
 
-    const { id, localFileName } = createFileName(mimetype);
+    const fileMeta = createFileName(mimetype);
+
+    if (!fileMeta) {
+      throw new ApiError({ message: `Cannot make a file for type ${mimetype}`, status: 400 });
+    }
+    const { id, localFileName } = fileMeta;
 
     const path = `${this.imageLocation}/${localFileName}`;
 
@@ -35,43 +49,44 @@ export const fileService = {
       createReadStream()
         .pipe(stream)
         .on("finish", async () => {
-          await createRecord<IDataRecord>(this.dataLocation, data);
-          if (mimetype.includes("image")) {
-            await this.generateThumbnail(localFileName);
-          }
           resolve(data);
         })
         .on("error", (err) => {
-          //@TODO create custom error class
-          fs.unlinkSync(path);
-          reject(new Error(err));
+          removeFile(path);
+          reject(new ApiError({ message: err, status: 500 }));
         });
     });
   },
 
+  /**
+   * @name getFiles
+   * @description Returns all paginated files includig thumbnails
+   */
   getFiles({ limit = 10, offset = 0 }: Pagination): IDataOut[] {
-    if (fs.existsSync(this.dataLocation)) {
-      const json = getParsedFiles<IDataRecord[]>(this.dataLocation);
+    const json = getParsedFiles<IDataRecord[]>(this.dataLocation);
 
-      const data = json.slice(offset, offset + limit).map((file) => this.getFile(file));
+    if (!json) return [];
 
-      return data;
-    }
+    const data = json.slice(offset, offset + limit).map((file) => this.getFile(file));
 
-    return [];
+    return data;
   },
 
+  /**
+   * @name search
+   * @description  Fuzzy search files on  orginalFilename and mimetype
+   * @param {string} query search query
+   */
+
   search(query: string): IDataOut[] | null {
-    if (fs.existsSync(this.dataLocation)) {
-      const json = getParsedFiles<IDataRecord[]>(this.dataLocation);
-      const fuse = new Fuse(json, this.fuseOptions);
+    const json = getParsedFiles<IDataRecord[]>(this.dataLocation);
 
-      const result = fuse.search(query);
+    if (!json) return null;
+    const fuse = new Fuse(json, this.fuseOptions);
 
-      return result.map(({ item }) => this.getFile(item));
-    }
+    const result = fuse.search(query);
 
-    return null;
+    return result.map(({ item }) => this.getFile(item));
   },
 
   getFile(file: IDataRecord): IDataOut {
@@ -86,6 +101,8 @@ export const fileService = {
   getFileById(id: string): IDataOut | null {
     const json = getParsedFiles<IDataRecord[]>(this.dataLocation);
 
+    if (!json) return null;
+
     const file = json.find((file) => file.id === id);
 
     if (!file) return null;
@@ -98,8 +115,15 @@ export const fileService = {
     };
   },
 
+  /**
+   * @name delete
+   * @description  Deletes a file, it's data record and thumbnail
+   */
+
   delete(id: string): IDataRecord | null {
     const json = getParsedFiles<IDataRecord[]>(this.dataLocation);
+
+    if (!json) return null;
 
     const file = json.find((file) => file.id === id);
 
@@ -118,9 +142,15 @@ export const fileService = {
     return file;
   },
 
+  /**
+   * @name edit
+   * @description Edits the name of the file as stored in the data record
+   */
   edit(input: IDataEdit): IDataRecord | null {
     const { id, orginalFilename } = input;
     const json = getParsedFiles<IDataRecord[]>(this.dataLocation);
+
+    if (!json) return null;
 
     const index = json.findIndex((file) => file.id === id);
 
@@ -134,7 +164,7 @@ export const fileService = {
 
   getThumbnail(filename: string): string {
     const path = `${this.thumbnailsLocation}/${filename}`;
-    let thumbnail = null;
+    let thumbnail;
     if (fs.existsSync(path)) {
       thumbnail = fs.readFileSync(`${path}`);
     } else {

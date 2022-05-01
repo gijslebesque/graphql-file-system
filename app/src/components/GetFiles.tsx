@@ -14,24 +14,35 @@ export const GetFiles: React.FC = () => {
     return <MediaCard key={file.id} file={file} />;
   });
 
+  const hasFiles = data.files.length > 0;
+
   return (
     <>
-      <Typography variant="h2">Your Files</Typography>
+      <Typography variant="h2" sx={{ mb: 4 }}>
+        Your Files
+      </Typography>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>{elems}</Box>
+      {!hasFiles && (
+        <Typography variant="body1" sx={{ mb: 4 }}>
+          You haven't uploaded any files yet.
+        </Typography>
+      )}
 
-      <Button
-        variant="contained"
-        color="success"
-        onClick={() =>
-          fetchMore({
-            variables: {
-              offset: data.files.length,
-            },
-          })
-        }
-      >
-        Show more
-      </Button>
+      {hasFiles && (
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() =>
+            fetchMore({
+              variables: {
+                offset: data.files.length,
+              },
+            })
+          }
+        >
+          Show more
+        </Button>
+      )}
     </>
   );
 };

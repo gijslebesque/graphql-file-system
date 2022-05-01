@@ -1,6 +1,13 @@
 import fs from "fs";
 
-export function createRecord<Type>(path: string, newEntry: Type): Type {
+/**
+ * @name createRecord
+ * @description Creates and/or inserts a data object to a file
+ * @param {string} path of file to store data
+ * @param {T} newEntry generic object that'll be stored
+ */
+
+export function createRecord<Type extends object>(path: string, newEntry: Type): Type {
   if (fs.existsSync(path)) {
     const readFile = fs.readFileSync(path, "utf8");
     const json = JSON.parse(readFile);
